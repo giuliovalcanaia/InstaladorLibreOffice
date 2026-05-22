@@ -33,6 +33,10 @@ if errorlevel 1 goto ERRO_INSTALACAO
 echo - [SUCESSO] Instalacao concluida!
 echo.
 
+REM --- CORRECAO: Pausa para garantir que processos residuais subam antes do abate ---
+echo Aguardando 5 segundos para a estabilizacao do sistema...
+timeout /t 5 /nobreak >nul
+
 REM 4. Matar processos residuais
 echo [ETAPA 3] Garantindo fechamento de processos em segundo plano...
 taskkill /F /IM soffice.bin /T >nul 2>&1
@@ -54,9 +58,16 @@ if exist "%LO_BASE_DIR%\user-old" rmdir /S /Q "%LO_BASE_DIR%\user-old"
 if not exist "%LO_BASE_DIR%\user" goto PULA_RENOMEAR
 ren "%LO_BASE_DIR%\user" "user-old"
 
+REM --- CORRECAO: Checagem se o comando renomear falhou (arquivos travados) ---
+if errorlevel 1 (
+    echo [ERRO] Nao foi possivel renomear a pasta local. Ela ainda esta em uso pelo sistema!
+    goto FIM
+)
+
 :PULA_RENOMEAR
 REM 7. Copiar nova pasta de configuracao
-xcopy /E /I /H /Y "%ORIGEM_REDE%" "%LO_BASE_DIR%\user" >nul
+REM --- CORRECAO: Removido o ">nul" para podermos ler o que o xcopy diz se der erro ---
+xcopy /E /I /H /Y "%ORIGEM_REDE%" "%LO_BASE_DIR%\user"
 if errorlevel 1 goto ERRO_COPIA
 
 echo.
@@ -69,7 +80,6 @@ echo.
 echo [ETAPA 6] Finalizando: Removendo instalador e abrindo o Writer...
 if exist "%MSI_PATH%" del /Q "%MSI_PATH%"
 echo - Arquivo "%FILE_NAME%" removido de Downloads.
-
 start "" "C:\Program Files\LibreOffice\program\swriter.exe"
 
 goto FIM
