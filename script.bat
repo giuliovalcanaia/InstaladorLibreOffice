@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo     INSTALACAO E CONFIGURACAO DO LIBREOFFICE
+echo    INSTALACAO E CONFIGURACAO DO LIBREOFFICE
 echo ===================================================
 echo.
 
@@ -63,6 +63,15 @@ echo.
 echo ===================================================
 echo [SUCESSO] LibreOffice instalado e configurado!
 echo ===================================================
+
+REM 8. Limpeza do instalador e abertura do Writer
+echo.
+echo [ETAPA 6] Finalizando: Removendo instalador e abrindo o Writer...
+if exist "%MSI_PATH%" del /Q "%MSI_PATH%"
+echo - Arquivo "%FILE_NAME%" removido de Downloads.
+
+start "" "C:\Program Files\LibreOffice\program\swriter.exe"
+
 goto FIM
 
 :ERRO_MSI
