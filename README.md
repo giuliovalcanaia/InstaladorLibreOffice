@@ -51,6 +51,13 @@ debug.bat
 ```
 
 ---
+## Diagrama de atividades
+### script.bat
+![script.bat](img/script_bat_activity_diagram.svg)
+
+### debug.bat
+![debug.bat](img/debug_bat_activity_diagram.svg)
+---
 
 ## Caminhos Configurados
 
